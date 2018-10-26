@@ -145,6 +145,7 @@ class AccountBankStatementImport(models.TransientModel):
         # provide 'account_number', which the generic module uses to find
         # the partner), we have to find res.partner through the name
         partner_obj = self.env['res.partner']
+        invoice_obj = self.env['account.invoice']
         for statement in res:
             for line_vals in statement['transactions']:
                 if not line_vals.get('partner_id') and line_vals.get('name'):
@@ -158,5 +159,9 @@ class AccountBankStatementImport(models.TransientModel):
                     partner = partner_obj.search(
                         [('name', 'ilike', name)], limit=1,
                     )
+                    if len(partner) < 1:
+                        partner = invoice_obj.search(
+                            [('number', 'ilike', title)], limit=1,
+                        ).partner_id
                     line_vals['partner_id'] = partner.id
         return res
