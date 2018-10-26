@@ -1,0 +1,50 @@
+<odoo>
+  <data>
+      <record id="ideas_payments_view" model="ir.ui.view">
+          <field name="name">Ideas Payments Import</field>
+          <field name="model">ideas_payments.importer</field>
+          <field name="priority">1</field>
+          <field name="arch" type="xml">
+              <form string="Select date range">
+                  <header>
+                      <h2>JPK FA</h2>
+                  </header>
+                  <sheet>
+                      <field name="upload_file" filename="file_name"/>
+                      <field name="file_name" invisible="1"/>
+                  </sheet>
+                  <footer>
+                      <button name="import_file" string="Import" type="object" class="btn-default" />
+                      <button string="Cancel" class="btn-default" special="cancel"/>
+                  </footer>
+              </form>
+          </field>
+      </record>
+
+      <record id="journal_dashboard_view_inherit_payments" model="ir.ui.view">
+          <field name="name">ideas_payments.journal.dashboard.kanban.inherit</field>
+          <field name="model">account.journal</field>
+          <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+          <field name="arch" type="xml">
+              <xpath expr='//button[@name="action_create_new"]' position="after">
+                  <div>
+                      <button type="action" name="ideas_payments.action_import" class="btn btn-sm">
+                          <span>Import Bank Statement from CSV</span>
+                      </button>
+                  </div>
+              </xpath>
+          </field>
+      </record>
+
+      <record id="action_import" model="ir.actions.act_window">
+          <field name="name">Import Bank Statement from CSV</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">ideas_payments.importer</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="ideas_payments_view"/>
+      </record>
+
+  </data>
+</odoo>
